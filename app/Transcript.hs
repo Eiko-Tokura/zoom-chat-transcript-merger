@@ -6,6 +6,7 @@ import Text.Megaparsec
 import Text.Megaparsec.Char
 import SimpleTime
 import qualified Data.Text.Lazy as TL
+import qualified Data.Text as T
 
 {-
 Format to parse:
@@ -47,8 +48,9 @@ renderTranscriptEntry te
   <> " --> "
   <> TL.pack (formatSimpleTime True (endTime te))
   <> "\n"
-  <> TL.fromStrict (entryContent te)
+  <> TL.fromStrict (removeNewLines $ entryContent te)
   <> "\n"
+  where removeNewLines = T.replace "\n" ";" . T.replace "\r" ""
 
 transcriptEntryParser :: Parsec () Text TranscriptEntry
 transcriptEntryParser = do
